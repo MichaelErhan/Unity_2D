@@ -82,7 +82,7 @@ public class Ball : MonoBehaviour
 
         GenerateFeedBack();
 
-        yield return new WaitForSecondsRealtime(2);
+        yield return new WaitForSecondsRealtime(4);
 
         ResetGame();
     }
