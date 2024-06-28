@@ -14,16 +14,18 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private ParticleSystem _dustEffect; // Эффект пыли
     [SerializeField] private Material _playerMaterial; // Материал игрока
 
-    private static readonly int IsWalking = Animator.StringToHash("isWalking"); // Кэшируем анимационный параметр
+    public static readonly int IsWalking = Animator.StringToHash("isWalking"); // Кэшируем анимационный параметр
+
+    public float IdleTime => _idleTime; // Открытое свойство для доступа к idleTime
 
     private void Start()
     {
         _animator = GetComponent<Animator>(); // Получение компонента Animator
-        MoveToNextWaypoint();  // Начало движения к первой точке
         _playerMaterial.color = new Color(0.219f, 0.219f, 0.219f, 1); // Устанавливаем цвет в начальный
+        _animator.SetBool(IsWalking, true); // Запуск с состояния Walk
     }
 
-    private void MoveToNextWaypoint()
+    public void MoveToNextWaypoint()
     {
         if (_currentWaypointIndex < _waypoints.Length)
         {
@@ -88,17 +90,6 @@ public class CharacterMovement : MonoBehaviour
                 return; // Выйти из метода, если зацикливание выключено и достигнута последняя точка
             }
         }
-
-        if (_currentWaypointIndex < _waypoints.Length)
-        {
-            StartCoroutine(IdleBeforeNextMove()); // Ожидание перед следующим движением
-        }
-    }
-
-    private IEnumerator IdleBeforeNextMove()
-    {
-        yield return new WaitForSeconds(_idleTime); // Задержка на точке
-        MoveToNextWaypoint(); // Начало движения к следующей точке
     }
 
     public void OnFootstep()
